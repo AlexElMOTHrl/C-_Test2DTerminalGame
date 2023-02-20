@@ -14,7 +14,7 @@ namespace C__Test2DGame
         static public bool canRender;
 
         static public Vector2 player = new Vector2(15, 8);
-        private static int playerSpeedHorizontal = 3;
+        private static int playerSpeedHorizontal = 2;
         private static int playerSpeedVertical = 1;
 
         #region Enemy
@@ -29,7 +29,7 @@ namespace C__Test2DGame
         private static double time;
         private static int windowHeight;
         private static int windowWidth;
-        private static float enemySpeed = 0.5f;
+        private static float enemySpeed = 1.5f;
         private static bool stopBullet;
 
         static public void Run()
@@ -78,7 +78,7 @@ namespace C__Test2DGame
                     if (enemy1Pos != player)
                     {
                         Thread.Sleep(100);
-                        Vector2 direction = player - enemy1Pos;
+                        Vector2 direction = player + new Vector2(5, -5) - enemy1Pos;
                         direction = Vector2.Normalize(direction);
                         Vector2 displacement = direction * enemySpeed;
                         enemy1Pos += displacement;
@@ -105,7 +105,7 @@ namespace C__Test2DGame
                                 break;
 
                             case ConsoleKey.A:
-                                player += new Vector2(-1, 0 * playerSpeedHorizontal);
+                                player += new Vector2(-1 * playerSpeedHorizontal, 0 );
                                 break;
 
                             case ConsoleKey.S:
@@ -113,7 +113,7 @@ namespace C__Test2DGame
                                 break;
 
                             case ConsoleKey.D:
-                                player += new Vector2(1, 0 * playerSpeedHorizontal);
+                                player += new Vector2(1 * playerSpeedHorizontal, 0);
                                 break;
 
                             default:
@@ -149,7 +149,6 @@ namespace C__Test2DGame
             }
         }
 
-
         static public void RenderOn(Vector2 pos, string sprite, bool visible)
         {
             if (visible)
@@ -158,7 +157,6 @@ namespace C__Test2DGame
                 Console.Write(sprite);
             }
         }
-
 
         static public void CastBullet()
         {
