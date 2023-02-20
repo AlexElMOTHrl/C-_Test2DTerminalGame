@@ -1,0 +1,30 @@
+/home/administrador/Documents/C#/C#_Test2DGame/bin/Debug/net6.0/C#_Test2DGame
+/home/administrador/Documents/C#/C#_Test2DGame/bin/Debug/net6.0/C#_Test2DGame.deps.json
+/home/administrador/Documents/C#/C#_Test2DGame/bin/Debug/net6.0/C#_Test2DGame.runtimeconfig.json
+/home/administrador/Documents/C#/C#_Test2DGame/bin/Debug/net6.0/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame/bin/Debug/net6.0/ref/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame/bin/Debug/net6.0/C#_Test2DGame.pdb
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.csproj.AssemblyReference.cache
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.GeneratedMSBuildEditorConfig.editorconfig
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.AssemblyInfoInputs.cache
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.AssemblyInfo.cs
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.csproj.CoreCompileInputs.cache
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/ref/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.pdb
+/home/administrador/Documents/C#/C#_Test2DGame/obj/Debug/net6.0/C#_Test2DGame.genruntimeconfig.cache
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/bin/Debug/net6.0/C#_Test2DGame
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/bin/Debug/net6.0/C#_Test2DGame.deps.json
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/bin/Debug/net6.0/C#_Test2DGame.runtimeconfig.json
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/bin/Debug/net6.0/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/bin/Debug/net6.0/ref/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/bin/Debug/net6.0/C#_Test2DGame.pdb
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.csproj.AssemblyReference.cache
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.GeneratedMSBuildEditorConfig.editorconfig
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.AssemblyInfoInputs.cache
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.AssemblyInfo.cs
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.csproj.CoreCompileInputs.cache
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/ref/C#_Test2DGame.dll
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.pdb
+/home/administrador/Documents/C#/C#_Test2DGame (copy)/obj/Debug/net6.0/C#_Test2DGame.genruntimeconfig.cache
