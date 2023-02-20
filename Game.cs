@@ -20,6 +20,8 @@ namespace C__Test2DGame
 
         #region Enemy
         static public Vector2 enemy1Pos;
+        private static Vector2 bullet;
+        private static bool bulletVisible = false;
 
         #endregion Enemy
 
@@ -27,6 +29,7 @@ namespace C__Test2DGame
         private static int windowHeight;
         private static int windowWidth;
         private static float enemySpeed = 0.5f;
+        private static bool stopBullet;
 
         static public void Run()
         {
@@ -56,7 +59,8 @@ namespace C__Test2DGame
             windowHeight = Console.WindowHeight;
             windowWidth = Console.WindowWidth;
 
-            enemy1Pos = new Vector2(windowWidth/2, windowHeight/2);
+            enemy1Pos = new Vector2(windowWidth / 2, windowHeight / 2);
+            bulletVisible = false;
 
             Console.WriteLine("Start");
             Console.Title = "TestGame";
@@ -112,7 +116,7 @@ namespace C__Test2DGame
                                 break;
 
                             default:
-                                // Tecla no reconocida
+                                CastBullet();
                                 break;
                         }
                     }
@@ -130,21 +134,68 @@ namespace C__Test2DGame
                 fpsTotalCount++;
                 Console.Clear();
 
-                RenderOn(enemy1Pos, "&");
-                RenderOn(player, "大");
-                RenderOn(new Vector2(0, windowHeight-3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}");
-                RenderOn(new Vector2(0, windowHeight-1), $"Player Position{player}");
-                RenderOn(new Vector2(20, 20),"*");
+                RenderOn(enemy1Pos, "Ç", true);
+                RenderOn(player, "大", true);
+                RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
+                RenderOn(new Vector2(0, windowHeight - 1), $"Player Position{player}", true);
+                RenderOn(bullet, "*", true);
 
                 //Console.WriteLine($"Ticks: {gameTicks} ({seconds}ms)\nTotal Ticks: {totalTicksCount}\nFps: {frameTarget} ({fps}ms)\nTotal FPS: {fpsTotalCount}");
                 //Console.WriteLine("Frame render");
             }
         }
 
-        static public void RenderOn(Vector2 pos, string sprite)
+        static public void RenderOn(Vector2 pos, string sprite, bool visible)
         {
-            Console.SetCursorPosition(Convert.ToInt32(pos.X), Convert.ToInt32(pos.Y));
-            Console.Write(sprite);
+            if (visible)
+            {
+                Console.SetCursorPosition(Convert.ToInt32(pos.X), Convert.ToInt32(pos.Y));
+                Console.Write(sprite);
+            }
+
         }
+
+        static public void CastBullet()
+        {
+            var cancellationTokenSource = new CancellationTokenSource();
+
+            Task.Run(() =>
+            {
+                bullet = enemy1Pos;
+                bulletVisible = true;
+                Vector2 oldPlayerPos = player;
+                Vector2 direction = oldPlayerPos - bullet;
+                while (true)
+                {
+                    if (bullet.X < 0 || bullet.X > windowWidth || bullet.Y < 0 || bullet.Y > windowHeight)
+                    {
+                        cancellationTokenSource.Cancel();
+                    }
+
+                    if (cancellationTokenSource.IsCancellationRequested)
+                    {
+                        // La tarea ha sido cancelada, así que salimos del bucle.
+                        break;
+                    }
+
+                    totalTicksCount++;
+                    if (enemy1Pos != player)
+                    {
+                        Thread.Sleep(50);
+                        
+                        direction = Vector2.Normalize(direction);
+                        Vector2 displacement = direction * 1;
+                        bullet += displacement;
+                    }
+                    else
+                    {
+                        // La tarea ha terminado, así que cancelamos el token.
+                        stopBullet = true;
+                        cancellationTokenSource.Cancel();
+                    }
+                }
+            }, cancellationTokenSource.Token);
+        }
+
     }
 }
