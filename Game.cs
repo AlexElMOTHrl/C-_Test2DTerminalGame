@@ -16,7 +16,7 @@ namespace C__Test2DGame
         static public double seconds = 1000;
         static public bool run = false;
         static public bool canRender;
-        private static double time;
+        //private static double time;
         private static int windowHeight;
         private static int windowWidth;
         #endregion GameConfig
@@ -54,12 +54,12 @@ namespace C__Test2DGame
 
         static public void Start()
         {
-            gameTicks = 32;
+            gameTicks = 64;
             seconds = 1000 / gameTicks;
-            frameTarget = 60;
+            frameTarget = 144;
             fps = 1000 / frameTarget;
 
-            time = 0;
+            //time = 0;
 
             Console.CursorVisible = false;
             canRender = true;
@@ -72,7 +72,7 @@ namespace C__Test2DGame
             bulletVisible = false;
 
             Random rnd = new Random();
-            player = new Vector2(rnd.Next(10, windowWidth - 10), rnd.Next(10, windowHeight - 10));
+            //player = new Vector2(rnd.Next(-10, windowWidth - 10), rnd.Next(-10, windowHeight - 10));
 
             Console.WriteLine("Start");
             Console.Title = "TestGame";
@@ -169,11 +169,11 @@ namespace C__Test2DGame
                     Console.ReadKey(true);
                 }
 
-                RenderOn(new Vector2(0, windowHeight - 2), $"Ejecutando?: {run}", true);
-                RenderOn(new Vector2(0, windowHeight - 1), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
-                //RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
-                //RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
-                //RenderOn(new Vector2(0, windowHeight - 1), $"Player Position{player}", true);
+                RenderOn(new Vector2(0, windowHeight - 6), $"Ejecutando?: {run}", true);
+                RenderOn(new Vector2(0, windowHeight - 5), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
+                RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
+                RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
+                RenderOn(new Vector2(0, windowHeight - 1), $"Player Position{player}", true);
 
                 canRender = false;
 
