@@ -5,6 +5,7 @@ namespace C__Test2DGame
     public class Game
     {
         #region GameConfig
+        private static bool isDebugEnabled = false;
         static public int score = 0;
         static public string deathMsg = "Has muerto";
         static public string restartMsg = "Presiona cualquier tecla para terminar.";
@@ -137,22 +138,22 @@ namespace C__Test2DGame
                     {
                         case ConsoleKey.W:
                             player += new Vector2(0, -1 * playerSpeedVertical);
-                            if (player.Y < 0) {player -= new Vector2(0, -1 * playerSpeedVertical);}
+                            if (player.Y < 0) { player -= new Vector2(0, -1 * playerSpeedVertical); }
                             break;
 
                         case ConsoleKey.A:
                             player += new Vector2(-1 * playerSpeedHorizontal, 0);
-                            if (player.X < 0) {player -= new Vector2(-1 * playerSpeedHorizontal, 0);}
+                            if (player.X < 0) { player -= new Vector2(-1 * playerSpeedHorizontal, 0); }
                             break;
 
                         case ConsoleKey.S:
                             player += new Vector2(0, 1 * playerSpeedVertical);
-                            if (player.Y > windowHeight - 1) {player -= new Vector2(0, 1 * playerSpeedVertical);}
+                            if (player.Y > windowHeight - 1) { player -= new Vector2(0, 1 * playerSpeedVertical); }
                             break;
 
                         case ConsoleKey.D:
                             player += new Vector2(1 * playerSpeedHorizontal, 0);
-                            if (player.X > windowWidth - 1) {player -= new Vector2(1 * playerSpeedHorizontal, 0);}
+                            if (player.X > windowWidth - 1) { player -= new Vector2(1 * playerSpeedHorizontal, 0); }
                             break;
 
                         default:
@@ -183,11 +184,16 @@ namespace C__Test2DGame
                     Console.ResetColor();
 
                     RenderOn(new Vector2(2, 1), $"Puntos: {score}", true);
-                    RenderOn(new Vector2(0, windowHeight - 6), $"Ejecutando?: {run}", true);
-                    RenderOn(new Vector2(0, windowHeight - 5), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
-                    RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
-                    RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
-                    RenderOn(new Vector2(0, windowHeight - 1), $"Player Position: {player}", true);
+
+                    if (isDebugEnabled)
+                    {
+                        RenderOn(new Vector2(0, windowHeight - 6), $"Ejecutando?: {run}", true);
+                        RenderOn(new Vector2(0, windowHeight - 5), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
+                        RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
+                        RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
+                        RenderOn(new Vector2(0, windowHeight - 1), $"Player Position: {player}", true);
+                    }
+
                 }
                 else if (isDead)
                 {
@@ -215,7 +221,7 @@ namespace C__Test2DGame
                         RenderOn(new Vector2(windowWidth / 2 - restartMsg.Length / 2, windowHeight / 2 + 2), restartMsgAnimation, true);
                         Thread.Sleep(25);
                     }
-                    
+
                     Console.ReadKey(true);
                     Console.Clear();
 
