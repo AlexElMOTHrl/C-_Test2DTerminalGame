@@ -31,7 +31,7 @@ namespace C__Test2DGame
         private static bool bulletVisible = false;
         private static float bulletSpeed = 3f;
         private static bool stopBullet;
-        private static float enemySpeed = 1.5f;
+        private static float enemySpeed = 1f;
         #endregion Enemy
 
         static public void Run()
@@ -51,7 +51,7 @@ namespace C__Test2DGame
 
         static public void Start()
         {
-            gameTicks = 120;
+            gameTicks = 64;
             seconds = 1000 / gameTicks;
             frameTarget = 144;
             fps = 1000 / frameTarget;
@@ -74,13 +74,16 @@ namespace C__Test2DGame
         {
             Task.Run(() =>
             {
+                Random rnd = new Random();
+                Vector2 offSet = new Vector2(0,0);
+
                 while (true)
                 {
                     totalTicksCount++;
                     if (enemy1Pos != player)
                     {
                         Thread.Sleep(100);
-                        Vector2 direction = player + new Vector2(5, -5) - enemy1Pos;
+                        Vector2 direction = player + offSet - enemy1Pos;
                         direction = Vector2.Normalize(direction);
                         Vector2 displacement = direction * enemySpeed;
                         enemy1Pos += displacement;
@@ -91,6 +94,7 @@ namespace C__Test2DGame
                     if (bulletVisible == false && shootTick > 5)
                     {
                         CastBullet();
+                        offSet = new Vector2(rnd.Next(-20,20), rnd.Next(-10,10));
                         shootTick = 0;
                     }
                 }
@@ -101,39 +105,37 @@ namespace C__Test2DGame
                 //? Calcular
                 //Console.WriteLine("Update");
 
-
-
-                while (run)
+                // Comprobar entrada del usuario
+                if (Console.KeyAvailable)
                 {
-                    // Comprobar entrada del usuario
-                    if (Console.KeyAvailable)
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                    switch (keyInfo.Key)
                     {
-                        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                        case ConsoleKey.W:
+                            player += new Vector2(0, -1 * playerSpeedVertical);
+                            break;
 
-                        switch (keyInfo.Key)
-                        {
-                            case ConsoleKey.W:
-                                player += new Vector2(0, -1 * playerSpeedVertical);
-                                break;
+                        case ConsoleKey.A:
+                            player += new Vector2(-1 * playerSpeedHorizontal, 0);
+                            break;
 
-                            case ConsoleKey.A:
-                                player += new Vector2(-1 * playerSpeedHorizontal, 0);
-                                break;
+                        case ConsoleKey.S:
+                            player += new Vector2(0, 1 * playerSpeedVertical);
+                            break;
 
-                            case ConsoleKey.S:
-                                player += new Vector2(0, 1 * playerSpeedVertical);
-                                break;
+                        case ConsoleKey.D:
+                            player += new Vector2(1 * playerSpeedHorizontal, 0);
+                            break;
 
-                            case ConsoleKey.D:
-                                player += new Vector2(1 * playerSpeedHorizontal, 0);
-                                break;
-
-                            default:
-                                //CastBullet();
-                                break;
-                        }
+                        default:
+                            //CastBullet();
+                            break;
                     }
                 }
+
+
+
                 Thread.Sleep(Convert.ToInt32(seconds));
             }
         }
@@ -147,12 +149,16 @@ namespace C__Test2DGame
                 Console.Clear();
 
                 // Renderizar enemigo, jugador, bala y datos
-                RenderOn(enemy1Pos, "Ç", true);
+                Console.ForegroundColor = ConsoleColor.Blue;
                 RenderOn(player, "i", true);
+                Console.ForegroundColor = ConsoleColor.Red;
+                RenderOn(enemy1Pos, "Ç", true);
+                RenderOn(bullet, "*", bulletVisible);
+                Console.ResetColor();
+
+                //RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
                 //RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
                 //RenderOn(new Vector2(0, windowHeight - 1), $"Player Position{player}", true);
-                RenderOn(bullet, "*", bulletVisible);
-                RenderOn(new Vector2(0, windowHeight - 1), Convert.ToString(shootTick), true);
 
                 canRender = false;
 
