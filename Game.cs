@@ -4,33 +4,35 @@ namespace C__Test2DGame
 {
     public class Game
     {
+        #region GameConfig
         static public int frameTarget;
         static public int fps;
         static int fpsTotalCount;
         static public int gameTicks;
+        static public int shootTick;
         private static int totalTicksCount;
         static public double seconds = 1000;
         static public bool run = false;
         static public bool canRender;
+        private static double time;
+        private static int windowHeight;
+        private static int windowWidth;
+        #endregion GameConfig
 
+        #region Player
         static public Vector2 player = new Vector2(15, 8);
         private static int playerSpeedHorizontal = 2;
         private static int playerSpeedVertical = 1;
+        #endregion Player
 
         #region Enemy
-
         static public Vector2 enemy1Pos;
         private static Vector2 bullet;
         private static bool bulletVisible = false;
         private static float bulletSpeed = 3f;
-
-        #endregion Enemy
-
-        private static double time;
-        private static int windowHeight;
-        private static int windowWidth;
-        private static float enemySpeed = 1.5f;
         private static bool stopBullet;
+        private static float enemySpeed = 1.5f;
+        #endregion Enemy
 
         static public void Run()
         {
@@ -83,6 +85,14 @@ namespace C__Test2DGame
                         Vector2 displacement = direction * enemySpeed;
                         enemy1Pos += displacement;
                     }
+
+                    shootTick++;
+
+                    if (bulletVisible == false && shootTick > 5)
+                    {
+                        CastBullet();
+                        shootTick = 0;
+                    }
                 }
             });
 
@@ -90,6 +100,8 @@ namespace C__Test2DGame
             {
                 //? Calcular
                 //Console.WriteLine("Update");
+
+
 
                 while (run)
                 {
@@ -105,7 +117,7 @@ namespace C__Test2DGame
                                 break;
 
                             case ConsoleKey.A:
-                                player += new Vector2(-1 * playerSpeedHorizontal, 0 );
+                                player += new Vector2(-1 * playerSpeedHorizontal, 0);
                                 break;
 
                             case ConsoleKey.S:
@@ -117,7 +129,7 @@ namespace C__Test2DGame
                                 break;
 
                             default:
-                                CastBullet();
+                                //CastBullet();
                                 break;
                         }
                     }
@@ -140,6 +152,7 @@ namespace C__Test2DGame
                 //RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
                 //RenderOn(new Vector2(0, windowHeight - 1), $"Player Position{player}", true);
                 RenderOn(bullet, "*", bulletVisible);
+                RenderOn(new Vector2(0, windowHeight - 1), Convert.ToString(shootTick), true);
 
                 canRender = false;
 
