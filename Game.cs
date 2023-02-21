@@ -5,8 +5,10 @@ namespace C__Test2DGame
     public class Game
     {
         #region GameConfig
-        static public string deadthMsg = "Has muerto";
-        static public string deadthMsgAnimation = string.Empty;
+        static public int score = 0;
+        static public string deathMsg = "Has muerto";
+        static public string restartMsg = "Presiona cualquier tecla para terminar.";
+        static public string deathMsgAnimation = string.Empty;
         static public int frameTarget;
         static public int fps;
         static int fpsTotalCount;
@@ -25,6 +27,7 @@ namespace C__Test2DGame
         static public Vector2 player = new Vector2(15, 8);
         private static int playerSpeedHorizontal = 2;
         private static int playerSpeedVertical = 1;
+        private static bool isDead = false;
         #endregion Player
 
         #region Enemy
@@ -36,6 +39,12 @@ namespace C__Test2DGame
         private static Vector2 roundBulletPosition;
         private static float enemySpeed = 1f;
         #endregion Enemy
+
+        #region Animations
+        private static string? restartMsgAnimation;
+        private static string scoreMsg = "Score: ";
+        private static string? scoreMsgAnimation;
+        #endregion
 
         static public void Run()
         {
@@ -54,12 +63,18 @@ namespace C__Test2DGame
 
         static public void Start()
         {
+            isDead = false;
+            score = 0;
+            run = true;
+
             gameTicks = 64;
             seconds = 1000 / gameTicks;
             frameTarget = 144;
             fps = 1000 / frameTarget;
 
-            //time = 0;
+            deathMsgAnimation = string.Empty;
+            restartMsgAnimation = string.Empty;
+            scoreMsgAnimation = string.Empty;
 
             Console.CursorVisible = false;
             canRender = true;
@@ -67,7 +82,7 @@ namespace C__Test2DGame
             windowWidth = Console.WindowWidth;
 
             enemy1Pos = new Vector2(windowWidth / 2, windowHeight / 2);
-            enemySpeed = 0.75f;
+            enemySpeed = 0.5f;
             bulletSpeed = 1f;
             bulletVisible = false;
 
@@ -95,11 +110,12 @@ namespace C__Test2DGame
                         direction = Vector2.Normalize(direction);
                         Vector2 displacement = direction * enemySpeed;
                         enemy1Pos += displacement;
+                        enemySpeed += 0.01f;
                     }
 
                     shootTick++;
 
-                    if (bulletVisible == false && shootTick > 5)
+                    if (bulletVisible == false && shootTick > 7)
                     {
                         CastBullet();
                         offSet = new Vector2(rnd.Next(-20, 20), rnd.Next(-10, 10));
@@ -111,8 +127,7 @@ namespace C__Test2DGame
             while (run)
             {
                 //? Calcular
-                //Console.WriteLine("Update");
-
+                score = totalTicksCount;
                 // Comprobar entrada del usuario
                 if (Console.KeyAvailable)
                 {
@@ -122,18 +137,22 @@ namespace C__Test2DGame
                     {
                         case ConsoleKey.W:
                             player += new Vector2(0, -1 * playerSpeedVertical);
+                            if (player.Y < 0) {player -= new Vector2(0, -1 * playerSpeedVertical);}
                             break;
 
                         case ConsoleKey.A:
                             player += new Vector2(-1 * playerSpeedHorizontal, 0);
+                            if (player.X < 0) {player -= new Vector2(-1 * playerSpeedHorizontal, 0);}
                             break;
 
                         case ConsoleKey.S:
                             player += new Vector2(0, 1 * playerSpeedVertical);
+                            if (player.Y > windowHeight - 1) {player -= new Vector2(0, 1 * playerSpeedVertical);}
                             break;
 
                         case ConsoleKey.D:
                             player += new Vector2(1 * playerSpeedHorizontal, 0);
+                            if (player.X > windowWidth - 1) {player -= new Vector2(1 * playerSpeedHorizontal, 0);}
                             break;
 
                         default:
@@ -141,9 +160,6 @@ namespace C__Test2DGame
                             break;
                     }
                 }
-
-
-
                 Thread.Sleep(Convert.ToInt32(seconds));
             }
         }
@@ -156,30 +172,55 @@ namespace C__Test2DGame
                 fpsTotalCount++;
                 Console.Clear();
 
-                // Renderizar enemigo, jugador, bala y datos
-                Console.ForegroundColor = ConsoleColor.Blue;
-                RenderOn(player, "i", true);
-                Console.ForegroundColor = ConsoleColor.Red;
-                RenderOn(enemy1Pos, "Ç", true);
-                RenderOn(bullet, "*", bulletVisible);
-                Console.ResetColor();
+                if (!isDead)
+                {
+                    // Renderizar enemigo, jugador, bala y datos
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    RenderOn(player, "i", true);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    RenderOn(enemy1Pos, "Ç", true);
+                    RenderOn(bullet, "*", bulletVisible);
+                    Console.ResetColor();
 
-                if (!run) {
-                    RenderOn(new Vector2(windowWidth/2-deadthMsg.Length/2, windowHeight/2), deadthMsg, true);
-                    Console.ReadKey(true);
+                    RenderOn(new Vector2(2, 1), $"Puntos: {score}", true);
+                    RenderOn(new Vector2(0, windowHeight - 6), $"Ejecutando?: {run}", true);
+                    RenderOn(new Vector2(0, windowHeight - 5), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
+                    RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
+                    RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
+                    RenderOn(new Vector2(0, windowHeight - 1), $"Player Position: {player}", true);
                 }
+                else if (isDead)
+                {
+                    scoreMsg = scoreMsg + Convert.ToString(score);
 
-                RenderOn(new Vector2(0, windowHeight - 6), $"Ejecutando?: {run}", true);
-                RenderOn(new Vector2(0, windowHeight - 5), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
-                RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
-                RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
-                RenderOn(new Vector2(0, windowHeight - 1), $"Player Position{player}", true);
+                    Thread.Sleep(100);
 
-                canRender = false;
+                    for (int i = 0; i < deathMsg.Length; i++) //? Has muerto
+                    {
+                        deathMsgAnimation += deathMsg[i];
+                        RenderOn(new Vector2(windowWidth / 2 - deathMsg.Length / 2, windowHeight / 2 - 2), deathMsgAnimation, true);
+                        Thread.Sleep(50);
+                    }
+                    Thread.Sleep(100);
+                    for (int i = 0; i < scoreMsg.Length; i++) //? Score:
+                    {
+                        scoreMsgAnimation += scoreMsg[i];
+                        RenderOn(new Vector2(windowWidth / 2 - scoreMsg.Length / 2, windowHeight / 2), scoreMsgAnimation, true);
+                        Thread.Sleep(50);
+                    }
+                    Thread.Sleep(100);
+                    for (int i = 0; i < restartMsg.Length; i++) //? Terminar
+                    {
+                        restartMsgAnimation += restartMsg[i];
+                        RenderOn(new Vector2(windowWidth / 2 - restartMsg.Length / 2, windowHeight / 2 + 2), restartMsgAnimation, true);
+                        Thread.Sleep(25);
+                    }
+                    
+                    Console.ReadKey(true);
+                    Console.Clear();
 
-                // Mostrar información de rendimiento
-                //Console.WriteLine($"Ticks: {gameTicks} ({seconds}ms)\nTotal Ticks: {totalTicksCount}\nFps: {frameTarget} ({fps}ms)\nTotal FPS: {fpsTotalCount}");
-                //Console.WriteLine("Frame render");
+                    Environment.Exit(1);
+                }
             }
         }
 
@@ -224,15 +265,15 @@ namespace C__Test2DGame
                         direction = Vector2.Normalize(direction);
                         Vector2 displacement = direction * bulletSpeed;
                         bullet += displacement;
-                        roundBulletPosition = new Vector2((float)Math.Truncate(bullet.X),(float)Math.Truncate(bullet.Y));
+                        roundBulletPosition = new Vector2((float)Math.Truncate(bullet.X), (float)Math.Truncate(bullet.Y));
                     }
                     else
                     {
                         // La tarea ha terminado, así que cancelamos el token.
                         bulletVisible = false;
                         stopBullet = true;
-                        run = false;
-                        Console.ReadKey(true);
+                        isDead = true;
+                        //run = false;
                         cancellationTokenSource.Cancel();
                     }
                 }
