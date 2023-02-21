@@ -5,6 +5,8 @@ namespace C__Test2DGame
     public class Game
     {
         #region GameConfig
+        static public string deadthMsg = "Has muerto";
+        static public string deadthMsgAnimation = string.Empty;
         static public int frameTarget;
         static public int fps;
         static int fpsTotalCount;
@@ -29,8 +31,9 @@ namespace C__Test2DGame
         static public Vector2 enemy1Pos;
         private static Vector2 bullet;
         private static bool bulletVisible = false;
-        private static float bulletSpeed = 3f;
+        private static float bulletSpeed = 1f;
         private static bool stopBullet;
+        private static Vector2 roundBulletPosition;
         private static float enemySpeed = 1f;
         #endregion Enemy
 
@@ -51,9 +54,9 @@ namespace C__Test2DGame
 
         static public void Start()
         {
-            gameTicks = 64;
+            gameTicks = 32;
             seconds = 1000 / gameTicks;
-            frameTarget = 144;
+            frameTarget = 60;
             fps = 1000 / frameTarget;
 
             time = 0;
@@ -64,7 +67,12 @@ namespace C__Test2DGame
             windowWidth = Console.WindowWidth;
 
             enemy1Pos = new Vector2(windowWidth / 2, windowHeight / 2);
+            enemySpeed = 0.75f;
+            bulletSpeed = 1f;
             bulletVisible = false;
+
+            Random rnd = new Random();
+            player = new Vector2(rnd.Next(10, windowWidth - 10), rnd.Next(10, windowHeight - 10));
 
             Console.WriteLine("Start");
             Console.Title = "TestGame";
@@ -75,7 +83,7 @@ namespace C__Test2DGame
             Task.Run(() =>
             {
                 Random rnd = new Random();
-                Vector2 offSet = new Vector2(0,0);
+                Vector2 offSet = new Vector2(0, 0);
 
                 while (true)
                 {
@@ -94,7 +102,7 @@ namespace C__Test2DGame
                     if (bulletVisible == false && shootTick > 5)
                     {
                         CastBullet();
-                        offSet = new Vector2(rnd.Next(-20,20), rnd.Next(-10,10));
+                        offSet = new Vector2(rnd.Next(-20, 20), rnd.Next(-10, 10));
                         shootTick = 0;
                     }
                 }
@@ -156,6 +164,13 @@ namespace C__Test2DGame
                 RenderOn(bullet, "*", bulletVisible);
                 Console.ResetColor();
 
+                if (!run) {
+                    RenderOn(new Vector2(windowWidth/2-deadthMsg.Length/2, windowHeight/2), deadthMsg, true);
+                    Console.ReadKey(true);
+                }
+
+                RenderOn(new Vector2(0, windowHeight - 2), $"Ejecutando?: {run}", true);
+                RenderOn(new Vector2(0, windowHeight - 1), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
                 //RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
                 //RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
                 //RenderOn(new Vector2(0, windowHeight - 1), $"Player Position{player}", true);
@@ -202,18 +217,22 @@ namespace C__Test2DGame
                     }
 
                     totalTicksCount++;
-                    if (enemy1Pos != player)
+                    if (roundBulletPosition != player)
                     {
-                        Thread.Sleep(50);
+                        Thread.Sleep(15);
 
                         direction = Vector2.Normalize(direction);
                         Vector2 displacement = direction * bulletSpeed;
                         bullet += displacement;
+                        roundBulletPosition = new Vector2((float)Math.Truncate(bullet.X),(float)Math.Truncate(bullet.Y));
                     }
                     else
                     {
                         // La tarea ha terminado, así que cancelamos el token.
+                        bulletVisible = false;
                         stopBullet = true;
+                        run = false;
+                        Console.ReadKey(true);
                         cancellationTokenSource.Cancel();
                     }
                 }
