@@ -47,6 +47,8 @@ namespace C__Test2DGame
         private static string? scoreMsgAnimation;
         #endregion
 
+        public static string map = "";
+
         static public void Run()
         {
             run = true;
@@ -77,12 +79,13 @@ namespace C__Test2DGame
             restartMsgAnimation = string.Empty;
             scoreMsgAnimation = string.Empty;
 
-            Console.CursorVisible = false;
+            Console.CursorVisible = true;
             canRender = true;
             windowHeight = Console.WindowHeight;
             windowWidth = Console.WindowWidth;
 
-            enemy1Pos = new Vector2(windowWidth / 2, windowHeight / 2);
+
+            enemy1Pos = new Vector2(windowWidth / 1.2f, windowHeight / 1.2f);
             enemySpeed = 0.5f;
             bulletSpeed = 1f;
             bulletVisible = false;
@@ -116,7 +119,7 @@ namespace C__Test2DGame
 
                     shootTick++;
 
-                    if (bulletVisible == false && shootTick > 7)
+                    if (bulletVisible == false && shootTick > 7 && !isDead)
                     {
                         CastBullet();
                         offSet = new Vector2(rnd.Next(-20, 20), rnd.Next(-10, 10));
@@ -176,6 +179,8 @@ namespace C__Test2DGame
                 if (!isDead)
                 {
                     // Renderizar enemigo, jugador, bala y datos
+                    RenderOn(new Vector2(windowWidth / 2 - 88 / 2, windowHeight / 2 - 18 / 2), map, true);
+
                     Console.ForegroundColor = ConsoleColor.Blue;
                     RenderOn(player, "i", true);
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -188,9 +193,9 @@ namespace C__Test2DGame
                     if (isDebugEnabled)
                     {
                         RenderOn(new Vector2(0, windowHeight - 6), $"Ejecutando?: {run}", true);
-                        RenderOn(new Vector2(0, windowHeight - 5), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
-                        RenderOn(new Vector2(0, windowHeight - 4), Convert.ToString(shootTick), true);
-                        RenderOn(new Vector2(0, windowHeight - 3), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
+                        RenderOn(new Vector2(0, windowHeight - 5), Convert.ToString(shootTick), true);
+                        RenderOn(new Vector2(0, windowHeight - 4), $"Enemy position: {enemy1Pos}\nEnemy speed: {enemySpeed}", true);
+                        RenderOn(new Vector2(0, windowHeight - 2), $"Bullet TRUNCATED Position{roundBulletPosition}", true);
                         RenderOn(new Vector2(0, windowHeight - 1), $"Player Position: {player}", true);
                     }
 
@@ -199,28 +204,15 @@ namespace C__Test2DGame
                 {
                     scoreMsg = scoreMsg + Convert.ToString(score);
 
-                    Thread.Sleep(100);
+                    Console.Beep(262, 200);
+                    Console.Beep(262 / 2, 500);
 
-                    for (int i = 0; i < deathMsg.Length; i++) //? Has muerto
-                    {
-                        deathMsgAnimation += deathMsg[i];
-                        RenderOn(new Vector2(windowWidth / 2 - deathMsg.Length / 2, windowHeight / 2 - 2), deathMsgAnimation, true);
-                        Thread.Sleep(50);
-                    }
                     Thread.Sleep(100);
-                    for (int i = 0; i < scoreMsg.Length; i++) //? Score:
-                    {
-                        scoreMsgAnimation += scoreMsg[i];
-                        RenderOn(new Vector2(windowWidth / 2 - scoreMsg.Length / 2, windowHeight / 2), scoreMsgAnimation, true);
-                        Thread.Sleep(50);
-                    }
+                    AnimatedText(deathMsg, new Vector2(windowWidth / 2 - deathMsg.Length / 2, windowHeight / 2 - 2), 50, true);
                     Thread.Sleep(100);
-                    for (int i = 0; i < restartMsg.Length; i++) //? Terminar
-                    {
-                        restartMsgAnimation += restartMsg[i];
-                        RenderOn(new Vector2(windowWidth / 2 - restartMsg.Length / 2, windowHeight / 2 + 2), restartMsgAnimation, true);
-                        Thread.Sleep(25);
-                    }
+                    AnimatedText(scoreMsg, new Vector2(windowWidth / 2 - scoreMsg.Length / 2, windowHeight / 2), 50, true);
+                    Thread.Sleep(100);
+                    AnimatedText(restartMsg, new Vector2(windowWidth / 2 - restartMsg.Length / 2, windowHeight / 2 + 2), 25, true);
 
                     Console.ReadKey(true);
                     Console.Clear();
@@ -242,6 +234,8 @@ namespace C__Test2DGame
         static public void CastBullet()
         {
             var cancellationTokenSource = new CancellationTokenSource();
+
+            Console.Beep(220, 100);
 
             Task.Run(() =>
             {
@@ -284,6 +278,66 @@ namespace C__Test2DGame
                     }
                 }
             }, cancellationTokenSource.Token);
+        }
+
+        static public void AnimatedText(string text, Vector2 position, int speed, bool showCursor)
+        {
+            string msgAnimation = string.Empty;
+
+            if (showCursor) { Console.CursorVisible = true; } else { Console.CursorVisible = false; }
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                msgAnimation += text[i];
+                RenderOn(position, msgAnimation, true);
+                Thread.Sleep(speed);
+            }
+
+            Console.CursorVisible = false;
+        }
+
+        static public string CalculateMapSize(int _windowWidth, int _windowHeight, float percentageReduction)
+        {
+            string width = string.Empty;
+            string height = string.Empty;
+            float heightReal;
+            string margin = string.Empty;
+            string insideMargin = string.Empty;
+            string map = string.Empty;
+
+            heightReal = _windowHeight * percentageReduction / 2;
+
+            for (int i = 0; i < _windowWidth * percentageReduction; i++)
+            {
+                width += '#';
+            }
+
+            for (int i = 0; i < _windowWidth / 2 - width.Length / 2; i++)
+            {
+                margin += ' ';
+            }
+
+            /* for (int i = 0; i < 4; i++)
+            {
+                insideMargin += ' ';
+            } */
+
+            for (int i = 0; i < 2; i++)
+            {
+                height += margin + "#" + "noo" + "#\n";
+            }
+
+            map += width + "\n";
+            map += height;
+
+            RenderOn(new Vector2(_windowWidth / 2 - width.Length / 2, _windowHeight / 2 - height.Length / 2), map, true); //!Debug
+
+            RenderOn(new Vector2(0, _windowHeight - 5), $"_Width: {_windowWidth}", true);
+            RenderOn(new Vector2(0, _windowHeight - 4), $"Width: {width.Length}", true);
+            RenderOn(new Vector2(0, _windowHeight - 3), $"_Height: {_windowHeight}", true);
+            RenderOn(new Vector2(0, _windowHeight - 2), $"Debug map: {_windowWidth * percentageReduction}", true);
+
+            return map;
         }
     }
 }
