@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/home/administrador/Documents/C#/C-_Test2DTerminalGame/C#_Test2DGame.csproj": {}
+    "C:\\Users\\segun\\Documents\\Scripts\\c#\\C-_Test2DTerminalGame\\C#_Test2DGame.csproj": {}
   },
   "projects": {
-    "/home/administrador/Documents/C#/C-_Test2DTerminalGame/C#_Test2DGame.csproj": {
+    "C:\\Users\\segun\\Documents\\Scripts\\c#\\C-_Test2DTerminalGame\\C#_Test2DGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/administrador/Documents/C#/C-_Test2DTerminalGame/C#_Test2DGame.csproj",
+        "projectUniqueName": "C:\\Users\\segun\\Documents\\Scripts\\c#\\C-_Test2DTerminalGame\\C#_Test2DGame.csproj",
         "projectName": "C#_Test2DGame",
-        "projectPath": "/home/administrador/Documents/C#/C-_Test2DTerminalGame/C#_Test2DGame.csproj",
-        "packagesPath": "/home/administrador/.nuget/packages/",
-        "outputPath": "/home/administrador/Documents/C#/C-_Test2DTerminalGame/obj/",
+        "projectPath": "C:\\Users\\segun\\Documents\\Scripts\\c#\\C-_Test2DTerminalGame\\C#_Test2DGame.csproj",
+        "packagesPath": "C:\\Users\\segun\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\segun\\Documents\\Scripts\\c#\\C-_Test2DTerminalGame\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/administrador/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\segun\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,7 +45,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -52,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.113/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

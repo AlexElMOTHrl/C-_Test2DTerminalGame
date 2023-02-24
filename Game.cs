@@ -72,9 +72,9 @@ namespace C__Test2DGame
             score = 0;
             run = true;
 
-            gameTicks = 120;
+            gameTicks = 144;
             seconds = 1000 / gameTicks;
-            frameTarget = 60;
+            frameTarget = 144;
             fps = 1000 / frameTarget;
 
             deathMsgAnimation = string.Empty;
@@ -208,8 +208,8 @@ namespace C__Test2DGame
                 {
                     scoreMsg = scoreMsg + Convert.ToString(score);
 
-                    /* Console.Beep(262, 200);
-                    Console.Beep(262 / 2, 500); */
+                    Console.Beep(262, 200);
+                    Console.Beep(262 / 2, 500);
 
                     Thread.Sleep(100);
                     AnimatedText(deathMsg, new Vector2(windowWidth / 2 - deathMsg.Length / 2, windowHeight / 2 - 2), 50, true);
@@ -317,7 +317,7 @@ namespace C__Test2DGame
 
                 for (int i = 0; i < _windowWidth * percentageReduction; i++)
                 {
-                    barWidth += '#';
+                    barWidth += '█';
                 }
 
                 for (int i = 0; i < _windowWidth / 2 - barWidth.Length / 2; i++)
@@ -332,7 +332,7 @@ namespace C__Test2DGame
 
                 for (int i = 0; i < heightReal; i++)
                 {
-                    height += margin + "#" + insideMargin + '#' + "\n";
+                    height += margin + "█" + insideMargin + '█' + "\n";
                 }
 
                 map += barWidth + "\n";
