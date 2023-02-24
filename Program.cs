@@ -5,8 +5,7 @@ internal class Program
     {
         Console.Clear();
         Console.WriteLine("Main execution");
-        Game.CalculateMapSize();
-        Console.ReadLine();
+        //Console.ReadLine();
         Game.Run();
     }
 }

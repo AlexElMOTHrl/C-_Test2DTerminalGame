@@ -25,7 +25,7 @@ namespace C__Test2DGame
         #endregion GameConfig
 
         #region Player
-        static public Vector2 player = new Vector2(15, 8);
+        static public Vector2 player = new Vector2(Console.WindowHeight / 2, Console.WindowLeft / 2);
         private static int playerSpeedHorizontal = 2;
         private static int playerSpeedVertical = 1;
         private static bool isDead = false;
@@ -48,6 +48,8 @@ namespace C__Test2DGame
         #endregion
 
         public static string map = "";
+        public static int mapWidth;
+        public static int mapHeight;
 
         static public void Run()
         {
@@ -70,9 +72,9 @@ namespace C__Test2DGame
             score = 0;
             run = true;
 
-            gameTicks = 64;
+            gameTicks = 120;
             seconds = 1000 / gameTicks;
-            frameTarget = 144;
+            frameTarget = 60;
             fps = 1000 / frameTarget;
 
             deathMsgAnimation = string.Empty;
@@ -84,17 +86,18 @@ namespace C__Test2DGame
             windowHeight = Console.WindowHeight;
             windowWidth = Console.WindowWidth;
 
+            Random rnd = new Random();
 
-            enemy1Pos = new Vector2(windowWidth / 1.2f, windowHeight / 1.2f);
+            enemy1Pos = new Vector2(rnd.Next(1, windowWidth), rnd.Next(1, windowHeight));
             enemySpeed = 0.5f;
             bulletSpeed = 1f;
             bulletVisible = false;
 
-            Random rnd = new Random();
-            //player = new Vector2(rnd.Next(-10, windowWidth - 10), rnd.Next(-10, windowHeight - 10));
+            player = new Vector2(windowWidth / 2, windowHeight / 2);
 
             Console.WriteLine("Start");
             Console.Title = "TestGame";
+            Console.CursorVisible = false;
         }
 
         static public void Update()
@@ -141,22 +144,22 @@ namespace C__Test2DGame
                     {
                         case ConsoleKey.W:
                             player += new Vector2(0, -1 * playerSpeedVertical);
-                            if (player.Y < 0) { player -= new Vector2(0, -1 * playerSpeedVertical); }
+                            if (player.Y < Console.WindowHeight / 2 - mapHeight / 2) { player -= new Vector2(0, -1 * playerSpeedVertical); }
                             break;
 
                         case ConsoleKey.A:
                             player += new Vector2(-1 * playerSpeedHorizontal, 0);
-                            if (player.X < 0) { player -= new Vector2(-1 * playerSpeedHorizontal, 0); }
+                            if (player.X < Console.WindowWidth / 2 - mapWidth / 2) { player -= new Vector2(-1 * playerSpeedHorizontal, 0); }
                             break;
 
                         case ConsoleKey.S:
                             player += new Vector2(0, 1 * playerSpeedVertical);
-                            if (player.Y > windowHeight - 1) { player -= new Vector2(0, 1 * playerSpeedVertical); }
+                            if (player.Y > Console.WindowHeight / 2 + mapHeight / 2) { player -= new Vector2(0, 1 * playerSpeedVertical); }
                             break;
 
                         case ConsoleKey.D:
                             player += new Vector2(1 * playerSpeedHorizontal, 0);
-                            if (player.X > windowWidth - 1) { player -= new Vector2(1 * playerSpeedHorizontal, 0); }
+                            if (player.X > Console.WindowWidth / 2 + mapWidth / 2) { player -= new Vector2(1 * playerSpeedHorizontal, 0); }
                             break;
 
                         default:
@@ -179,6 +182,7 @@ namespace C__Test2DGame
                 if (!isDead)
                 {
                     // Renderizar enemigo, jugador, bala y datos
+                    Game.RenderMap(0.70f);
                     RenderOn(new Vector2(windowWidth / 2 - 88 / 2, windowHeight / 2 - 18 / 2), map, true);
 
                     Console.ForegroundColor = ConsoleColor.Blue;
@@ -204,8 +208,8 @@ namespace C__Test2DGame
                 {
                     scoreMsg = scoreMsg + Convert.ToString(score);
 
-                    Console.Beep(262, 200);
-                    Console.Beep(262 / 2, 500);
+                    /* Console.Beep(262, 200);
+                    Console.Beep(262 / 2, 500); */
 
                     Thread.Sleep(100);
                     AnimatedText(deathMsg, new Vector2(windowWidth / 2 - deathMsg.Length / 2, windowHeight / 2 - 2), 50, true);
@@ -235,7 +239,7 @@ namespace C__Test2DGame
         {
             var cancellationTokenSource = new CancellationTokenSource();
 
-            Console.Beep(220, 100);
+            /* Console.Beep(220, 100); */
 
             Task.Run(() =>
             {
@@ -296,46 +300,58 @@ namespace C__Test2DGame
             Console.CursorVisible = false;
         }
 
-        static public string CalculateMapSize(int _windowWidth, int _windowHeight, float percentageReduction)
+        static public string RenderMap(float percentageReduction)
         {
-            string width = string.Empty;
+            int _windowWidth = Console.WindowWidth;
+            int _windowHeight = Console.WindowHeight;
+            string barWidth = string.Empty;
             string height = string.Empty;
-            float heightReal;
+            float heightReal = 0;
             string margin = string.Empty;
             string insideMargin = string.Empty;
             string map = string.Empty;
 
-            heightReal = _windowHeight * percentageReduction / 2;
-
-            for (int i = 0; i < _windowWidth * percentageReduction; i++)
+            if (map == string.Empty)
             {
-                width += '#';
+                heightReal = _windowHeight * percentageReduction - 2;
+
+                for (int i = 0; i < _windowWidth * percentageReduction; i++)
+                {
+                    barWidth += '#';
+                }
+
+                for (int i = 0; i < _windowWidth / 2 - barWidth.Length / 2; i++)
+                {
+                    margin += ' ';
+                }
+
+                for (int i = 0; i < barWidth.Length - 2; i++)
+                {
+                    insideMargin += ' ';
+                }
+
+                for (int i = 0; i < heightReal; i++)
+                {
+                    height += margin + "#" + insideMargin + '#' + "\n";
+                }
+
+                map += barWidth + "\n";
+                map += height;
+                map += margin + barWidth;
+
+                mapWidth = barWidth.Length;
+                mapHeight = (int)heightReal;
             }
 
-            for (int i = 0; i < _windowWidth / 2 - width.Length / 2; i++)
-            {
-                margin += ' ';
-            }
+                RenderOn(new Vector2(_windowWidth / 2 - barWidth.Length / 2, _windowHeight / 2 - heightReal / 2), map, true);
 
-            /* for (int i = 0; i < 4; i++)
-            {
-                insideMargin += ' ';
-            } */
 
-            for (int i = 0; i < 2; i++)
-            {
-                height += margin + "#" + "noo" + "#\n";
-            }
+            /* RenderOn(new Vector2(0, _windowHeight - 6), $"_Width: {_windowWidth}", true);
+            RenderOn(new Vector2(0, _windowHeight - 5), $"Bar Width: {barWidth.Length}", true);
+            RenderOn(new Vector2(0, _windowHeight - 4), $"_Height: {_windowHeight}", true);
+            RenderOn(new Vector2(0, _windowHeight - 3), $"Map Height: {heightReal}", true);
 
-            map += width + "\n";
-            map += height;
-
-            RenderOn(new Vector2(_windowWidth / 2 - width.Length / 2, _windowHeight / 2 - height.Length / 2), map, true); //!Debug
-
-            RenderOn(new Vector2(0, _windowHeight - 5), $"_Width: {_windowWidth}", true);
-            RenderOn(new Vector2(0, _windowHeight - 4), $"Width: {width.Length}", true);
-            RenderOn(new Vector2(0, _windowHeight - 3), $"_Height: {_windowHeight}", true);
-            RenderOn(new Vector2(0, _windowHeight - 2), $"Debug map: {_windowWidth * percentageReduction}", true);
+            RenderOn(new Vector2(0, _windowHeight - 1), $"Debug map: {_windowWidth * percentageReduction}", true); */
 
             return map;
         }
