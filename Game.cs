@@ -47,9 +47,11 @@ namespace C__Test2DGame
         private static string? scoreMsgAnimation;
         #endregion
 
+        #region Mapa
         public static string map = "";
         public static int mapWidth;
         public static int mapHeight;
+        #endregion Mapa
 
         static public void Run()
         {
@@ -332,7 +334,7 @@ namespace C__Test2DGame
 
                 for (int i = 0; i < heightReal; i++)
                 {
-                    height += margin + "█" + insideMargin + '█' + "\n";
+                    height += margin + '█' + insideMargin + '█' + "\n";
                 }
 
                 map += barWidth + "\n";
